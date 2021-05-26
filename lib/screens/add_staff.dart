@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import './sideBar.dart';
+import 'package:intl/intl.dart';
 
 class NotesPage extends StatefulWidget {
   @override
@@ -15,16 +16,17 @@ class DayOfWeek {
 
 class _NotesPageState extends State<NotesPage> {
   DateTime selectedDate = DateTime.now();
-
+  String formattedDate='Enter DOB ';
   Future<void> _selectDate(BuildContext context) async {
     final DateTime picked = await showDatePicker(
         context: context,
         initialDate: selectedDate,
         firstDate: DateTime(2015, 8),
         lastDate: DateTime(2101));
+
     if (picked != null && picked != selectedDate)
       setState(() {
-        selectedDate = picked;
+         formattedDate = DateFormat('yyyy-MM-dd').format(picked);
       });
   }
 
@@ -40,7 +42,7 @@ class _NotesPageState extends State<NotesPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('Flutter TextField Example'),
+          title: Text('Employee Details'),
         ),
         body: Padding(
             padding: EdgeInsets.all(15),
@@ -87,7 +89,7 @@ class _NotesPageState extends State<NotesPage> {
                     child:  RaisedButton(
                       textColor: Colors.white,
                       color: Colors.blue,
-                      child: Text(selectedDate.toString()),
+                      child: Text(formattedDate),
                       onPressed: () => _selectDate(context),
                     )
                 ),
