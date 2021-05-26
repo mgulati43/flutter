@@ -48,6 +48,8 @@ flutter:
     - assets/logos/55176.jpg
     - assets/logos/loading.gif
     - assets/logos/genericUserIcon.png
+    - assets/logos/UserIcon.jpg
+    - assets/logos/images.png
 
 
   fonts:

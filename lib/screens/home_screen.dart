@@ -19,26 +19,26 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  bool _loading = false;
+  bool _loading = true;
   List<MenuJsonParser> foodItems = [];
   List<StaffJsonParser> staffList = [];
+  //double listHeight = MediaQuery.of(context).size.height * .7;
 
   @override
   void initState() {
     super.initState();
     _loading = true;
+
     callListApi();
     callListApiStaff();
   }
 
   void addMenuScreen() {
-
     Navigator.of(context)
         .push(MaterialPageRoute(builder: (context) => NotesPage()));
   }
 
   void addStaff() {
-
     Navigator.of(context)
         .push(MaterialPageRoute(builder: (context) => NotesPage()));
   }
@@ -97,7 +97,6 @@ class _HomePageState extends State<HomePage> {
         staffList = jsonObjects
             .map((jsonObject) => StaffJsonParser.fromJson(jsonObject))
             .toList();
-        _loading = false;
       });
     } catch (e) {
       //Write exception statement here
@@ -198,7 +197,8 @@ class _HomePageState extends State<HomePage> {
                           color: Color.fromRGBO(19, 22, 40, 1),
                         ),
                         Container(
-                            height: 800, //height of TabBarView
+                            height: MediaQuery.of(context).size.height *
+                                .65, //height of TabBarView
                             decoration: BoxDecoration(
                                 border: Border(
                                     top: BorderSide(
@@ -210,6 +210,12 @@ class _HomePageState extends State<HomePage> {
                                           itemCount: foodItems.length,
                                           itemBuilder: (context, index) {
                                             return Card(
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(20),
+                                                ),
+                                                elevation: 10,
+                                                //color: Colors.grey[300],
                                                 child: ListTile(
                                                     title: Text(foodItems[index]
                                                         .menu_name),
@@ -231,41 +237,123 @@ class _HomePageState extends State<HomePage> {
                                           itemCount: staffList.length,
                                           itemBuilder: (context, index) {
                                             return Card(
+                                              elevation: 10,
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(20),
+                                              ),
                                               child: ListTile(
+                                                leading: CircleAvatar(
+                                                  backgroundImage: staffList[index].gender == 'Male'
+                                                      ? AssetImage('assets/logos/UserIcon.jpg')
+                                                      : AssetImage('assets/logos/images.png'),
+                                                ),
                                                 title: Text(
-                                                  'Name ' +
-                                                      staffList[index].name +
-                                                      '\n',
+                                                  staffList[index].name + ' (' + staffList[index].desingination + ')',
                                                   style: TextStyle(
-                                                    color: Colors.black,
+                                                    color: Colors.green[900],
                                                     letterSpacing: 1.5,
                                                     fontSize: 20.0,
                                                     fontWeight: FontWeight.bold,
                                                   ),
                                                 ),
-                                                subtitle: Text(
-                                                  'Mobile no ' +
+                                                subtitle: Column(
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: [
+                                                    Container(margin: EdgeInsets.only(bottom: 2, top: 10),
+                                                    child: RichText(
+                                                      
+                                                      text: TextSpan(
+                                                        children: [
+                                                          WidgetSpan(
+                                                            child: Icon(Icons.phone_android_rounded, size: 20,color: Colors.red,),
+                                                          ),
+                                                          TextSpan(
+
+                                                            text: staffList[index].mobile_no,
+                                                            style:  TextStyle(
+                                                              color: Colors.black,
+                                                              letterSpacing: 1.5,
+                                                              fontSize: 15.0,
+                                                            )
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),)
+                                                    ,
+                                                    RichText(
+                                                      text: TextSpan(
+                                                        children: [
+                                                          WidgetSpan(
+                                                            child: Icon(Icons.email_rounded, size: 20,color: Colors.blue,),
+                                                          ),
+                                                          TextSpan(
+                                                            text: staffList[index].email,
+                                                            style:  TextStyle(
+                                                              color: Colors.black,
+                                                              letterSpacing: 1.5,
+                                                              fontSize: 15.0,
+                                                            )
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                    /* RichText(
+                                                      text: TextSpan(
+                                                        children: [
+                                                          WidgetSpan(
+                                                            child: Icon(Icons.arrow_forward_rounded, size: 20,color: Colors.blue,),
+                                                          ),
+                                                          TextSpan(
+                                                            text: staffList[index].desingination,
+                                                            style:  TextStyle(
+                                                              color: Colors.black,
+                                                              letterSpacing: 1.5,
+                                                              fontSize: 15.0,
+                                                            )
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ) */
+
+
+                                                    /* Text('Designation: ' + staffList[index].desingination,
+                                                    style:  TextStyle(
+                                                              color: Colors.black,
+                                                              letterSpacing: 1.5,
+                                                              fontSize: 15.0,
+                                                            ),) */
+/* 
+                                                    Icon(
+                                                        Icons.email_rounded,
+                                                        color: Color.fromRGBO(19, 22, 40, 1)),
+                                                    Text(staffList[index].email), */
+                                                    
+
+                                                  ],
+                                                )
+
+                                                /* Text(
+                                                  'Mobile: ' + 
                                                       staffList[index]
                                                           .mobile_no +
                                                       '\n' +
-                                                      '\n' +
-                                                      'Email ' +
+                                                      'Email: ' +
                                                       staffList[index].email +
                                                       '\n' +
-                                                      '\n' +
-                                                      'Gender ' +
+                                                      'Gender: ' +
                                                       staffList[index].gender +
                                                       '\n' +
-                                                      '\n' +
-                                                      'Designation ' +
+                                                      'Designation: ' +
                                                       staffList[index]
                                                           .desingination,
                                                   style: TextStyle(
                                                     color: Colors.black,
                                                     letterSpacing: 1.5,
-                                                    fontSize: 15.0,
+                                                    fontSize: 12.0,
                                                   ),
-                                                ),
+                                                ) */
+                                                ,
                                               ),
                                             );
                                           })
