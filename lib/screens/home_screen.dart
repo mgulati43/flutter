@@ -298,62 +298,8 @@ class _HomePageState extends State<HomePage> {
                                                         ],
                                                       ),
                                                     ),
-                                                    /* RichText(
-                                                      text: TextSpan(
-                                                        children: [
-                                                          WidgetSpan(
-                                                            child: Icon(Icons.arrow_forward_rounded, size: 20,color: Colors.blue,),
-                                                          ),
-                                                          TextSpan(
-                                                            text: staffList[index].desingination,
-                                                            style:  TextStyle(
-                                                              color: Colors.black,
-                                                              letterSpacing: 1.5,
-                                                              fontSize: 15.0,
-                                                            )
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ) */
-
-
-                                                    /* Text('Designation: ' + staffList[index].desingination,
-                                                    style:  TextStyle(
-                                                              color: Colors.black,
-                                                              letterSpacing: 1.5,
-                                                              fontSize: 15.0,
-                                                            ),) */
-/* 
-                                                    Icon(
-                                                        Icons.email_rounded,
-                                                        color: Color.fromRGBO(19, 22, 40, 1)),
-                                                    Text(staffList[index].email), */
-                                                    
-
                                                   ],
                                                 )
-
-                                                /* Text(
-                                                  'Mobile: ' + 
-                                                      staffList[index]
-                                                          .mobile_no +
-                                                      '\n' +
-                                                      'Email: ' +
-                                                      staffList[index].email +
-                                                      '\n' +
-                                                      'Gender: ' +
-                                                      staffList[index].gender +
-                                                      '\n' +
-                                                      'Designation: ' +
-                                                      staffList[index]
-                                                          .desingination,
-                                                  style: TextStyle(
-                                                    color: Colors.black,
-                                                    letterSpacing: 1.5,
-                                                    fontSize: 12.0,
-                                                  ),
-                                                ) */
-                                                ,
                                               ),
                                             );
                                           })
