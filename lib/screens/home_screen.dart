@@ -206,7 +206,6 @@ class _HomePageState extends State<HomePage> {
                                         color: Colors.grey, width: 0.5))),
                             child: TabBarView(children: <Widget>[
                               Container(
-                                  padding: EdgeInsets.only(top: 8, bottom: 8),
                                   child: _loading == false
                                       ? ListView.builder(
                                           itemCount: foodItems.length,
@@ -234,13 +233,11 @@ class _HomePageState extends State<HomePage> {
                                               'assets/logos/loading.gif'),
                                         ))),
                               Container(
-                                  padding: EdgeInsets.only(top: 8, bottom: 8),
                                   child: _loading == false
                                       ? ListView.builder(
                                           itemCount: staffList.length,
                                           itemBuilder: (context, index) {
                                             return Card(
-<<<<<<< Updated upstream
                                               elevation: 10,
                                               shape: RoundedRectangleBorder(
                                                 borderRadius:
@@ -256,22 +253,8 @@ class _HomePageState extends State<HomePage> {
                                                   staffList[index].name + ' (' + staffList[index].desingination + ')',
                                                   style: TextStyle(
                                                     color: Colors.green[900],
-=======
-
-                                              child: ListTile(
-
-                                                title: Text(
-                                                  'Name ' +
-                                                      staffList[index].name +
-                                                      '\n',textAlign: TextAlign.center,
-                                                  style:
-
-                                                  TextStyle(
-                                                    color: Colors.black,
->>>>>>> Stashed changes
                                                     letterSpacing: 1.5,
                                                     fontSize: 20.0,
-
                                                     fontWeight: FontWeight.bold,
                                                   ),
                                                 ),
@@ -316,8 +299,62 @@ class _HomePageState extends State<HomePage> {
                                                         ],
                                                       ),
                                                     ),
+                                                    /* RichText(
+                                                      text: TextSpan(
+                                                        children: [
+                                                          WidgetSpan(
+                                                            child: Icon(Icons.arrow_forward_rounded, size: 20,color: Colors.blue,),
+                                                          ),
+                                                          TextSpan(
+                                                            text: staffList[index].desingination,
+                                                            style:  TextStyle(
+                                                              color: Colors.black,
+                                                              letterSpacing: 1.5,
+                                                              fontSize: 15.0,
+                                                            )
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ) */
+
+
+                                                    /* Text('Designation: ' + staffList[index].desingination,
+                                                    style:  TextStyle(
+                                                              color: Colors.black,
+                                                              letterSpacing: 1.5,
+                                                              fontSize: 15.0,
+                                                            ),) */
+/* 
+                                                    Icon(
+                                                        Icons.email_rounded,
+                                                        color: Color.fromRGBO(19, 22, 40, 1)),
+                                                    Text(staffList[index].email), */
+                                                    
+
                                                   ],
                                                 )
+
+                                                /* Text(
+                                                  'Mobile: ' + 
+                                                      staffList[index]
+                                                          .mobile_no +
+                                                      '\n' +
+                                                      'Email: ' +
+                                                      staffList[index].email +
+                                                      '\n' +
+                                                      'Gender: ' +
+                                                      staffList[index].gender +
+                                                      '\n' +
+                                                      'Designation: ' +
+                                                      staffList[index]
+                                                          .desingination,
+                                                  style: TextStyle(
+                                                    color: Colors.black,
+                                                    letterSpacing: 1.5,
+                                                    fontSize: 12.0,
+                                                  ),
+                                                ) */
+                                                ,
                                               ),
                                             );
                                           })
