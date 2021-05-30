@@ -175,6 +175,7 @@ class _LoginScreenState extends State<LoginScreen> {
         map['mobile_no'] = _phoneController.text;
         map['notification_id'] = '234'; //notification here
         map['device_id'] = deviceId; //device id here
+        print('test'+deviceId);
         var url = Uri.parse(urlSent);
         var response;
         //http request by encoding request in utf8 format and decoding in utf8 format
@@ -188,7 +189,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
           Map<String, dynamic> map1 =
               jsonDecode(decodedResponse); // import 'dart:convert';
-
+       print('demo'+decodedResponse);
           String name = map1['data']['message'];
           Fluttertoast.showToast(
               msg: name,

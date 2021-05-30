@@ -5,6 +5,7 @@ import './calendar_screen.dart';
 import './notes_screen.dart';
 import './settings_screen.dart';
 import './menu_header.dart';
+import 'add_staff.dart';
 import 'home_screen.dart';
 import 'login_screen.dart';
 class SideBar extends StatefulWidget {

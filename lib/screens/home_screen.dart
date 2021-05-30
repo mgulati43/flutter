@@ -6,6 +6,7 @@ import 'dart:typed_data';
 import './sideBar.dart';
 
 import 'add_staff.dart';
+import 'notes_screen.dart';
 
 class HomePage extends StatefulWidget {
   /*final int mobileNumber;
@@ -35,7 +36,7 @@ class _HomePageState extends State<HomePage> {
 
   void addMenuScreen() {
     Navigator.of(context)
-        .push(MaterialPageRoute(builder: (context) => NotesPage()));
+        .push(MaterialPageRoute(builder: (context) => MenuPage()));
   }
 
   void addStaff() {
