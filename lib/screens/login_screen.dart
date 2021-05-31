@@ -15,6 +15,7 @@ import 'package:circular_countdown_timer/circular_countdown_timer.dart';
 //resend otp after 60 seconds
 import 'package:http/http.dart' as http;
 import 'package:login_app/utilities/constants.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'home_screen.dart';
 
@@ -42,6 +43,7 @@ class _LoginScreenState extends State<LoginScreen> {
   bool _phoneNumber = true;
   String _buttonString = 'LOGIN';
   Map<String, dynamic> deviceData;
+  SharedPreferences sharedPreferences;
   String deviceId = '';
   final TextEditingController _pinPutController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
@@ -50,6 +52,16 @@ class _LoginScreenState extends State<LoginScreen> {
   //60 second duration of timer
   CountDownController _controller = CountDownController();
   int _duration = 60;
+
+  _onChanged(String name,String mobile_no,String user_type) async {
+    sharedPreferences = await SharedPreferences.getInstance();
+    setState(() {
+      sharedPreferences.setString("mobile_no", mobile_no);
+      sharedPreferences.setString("name", name);
+      sharedPreferences.setString("user_type", user_type);
+      sharedPreferences.commit();
+    });
+  }
 
   @override
   void initState() {
@@ -93,8 +105,13 @@ class _LoginScreenState extends State<LoginScreen> {
       //map of string and object type used for storing data coming from otp response
       Map<String, dynamic> mapOtpResponse = jsonDecode(decodedResponse);
       //fetch message Response status ie invalid otp or valid otp
-      String messageResponse = mapOtpResponse['data']['message'];
-      print('demo'+messageResponse);
+      //String messageResponse = mapOtpResponse['data']['message'];
+      //String mobile_no =  mapOtpResponse['data']['mobile_no'];
+      //String user_type  =  mapOtpResponse['data']['user_type'];
+      //String name  =  mapOtpResponse['data']['name'];
+
+      //_onChanged(name, mobile_no, user_type);
+
       setState(() {
         resendBool=true;
         resendButtonBool=false;
@@ -137,7 +154,13 @@ class _LoginScreenState extends State<LoginScreen> {
       //map of string and object type used for storing data coming from otp response
       Map<String, dynamic> mapOtpResponse = jsonDecode(decodedResponse);
       //fetch message Response status ie invalid otp or valid otp
+      print('checking'+mapOtpResponse.toString());
+      print('hii');
+      String req = mapOtpResponse['data']['message'];
+
+      print('check'+req);
       String messageResponse = mapOtpResponse['data']['message'];
+
       //if messageResponse is invalid otp display the message of invalid otp
       //else proceed to homescreen
       if (messageResponse == 'Invalid Otp') {

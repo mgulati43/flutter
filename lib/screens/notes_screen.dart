@@ -1,6 +1,7 @@
 
 
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:io';
 import 'add_staff.dart';
 import 'package:image_picker/image_picker.dart';
@@ -19,14 +20,12 @@ class Suborder {
 
 class _MenuPageState extends State<MenuPage> {
 
-  File _picked;
+
+  File _pickedImage;
+
+  SharedPreferences sharedPreferences;
 
 
-
-  DayOfWeek today;
-  Suborder sub;
-
-  File _imageFile;
 
   Widget _buildImage() {
     if (_imageFile != null) {
@@ -36,6 +35,40 @@ class _MenuPageState extends State<MenuPage> {
       return Text('Take an image to start', style: TextStyle(fontSize: 18.0));
     }
   }
+
+  void _pickImage() async {
+    final imageSource = await showDialog<ImageSource>(
+        context: context,
+        builder: (context) =>
+            AlertDialog(
+              title: Text("Select the image source"),
+              actions: <Widget>[
+                MaterialButton(
+                  child: Text("Camera"),
+                  onPressed: () => Navigator.pop(context, ImageSource.camera),
+                ),
+                MaterialButton(
+                  child: Text("Gallery"),
+                  onPressed: () => Navigator.pop(context, ImageSource.gallery),
+                )
+              ],
+            )
+    );
+
+    if(imageSource != null) {
+      final file = await ImagePicker.pickImage(source: imageSource);
+      if(file != null) {
+        setState(() => _pickedImage = file);
+      }
+    }
+  }
+
+  DayOfWeek today;
+  Suborder sub;
+
+  File _imageFile;
+
+
 
   Future<void> captureImage(ImageSource imageSource) async {
     try {
@@ -325,20 +358,25 @@ class _MenuPageState extends State<MenuPage> {
                           }).toList(),
                         ),
 
-              //           Expanded(child:  _buildImage()),
-              //           _buildButtons(),
+                        _pickedImage == null ?
+                        Text("") :
+                        Image(image: FileImage(_pickedImage),width: 100,height: 100,),
+
+                       //Expanded(child:  _buildImage()),
+                        // _buildButtons(),
               // Image.file(_imageFile,width: 100,height: 100);
 
                         RaisedButton(
                           elevation: 15.0,
 
-                          padding: EdgeInsets.all(15.0),
+                          padding: EdgeInsets.all(25.0),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(15.0),
                           ),
                           color: Colors.red,
+                          onPressed: _pickImage,
                           child: Text(
-                            'ADD MENU',
+                            'GALLERY/CAMERA',
                             style: TextStyle(
                               color: Colors.white,
                               letterSpacing: 1.5,
