@@ -1,6 +1,9 @@
+
+
 import 'package:flutter/material.dart';
-import './sideBar.dart';
+import 'dart:io';
 import 'add_staff.dart';
+import 'package:image_picker/image_picker.dart';
 
 class MenuPage extends StatefulWidget {
   @override
@@ -16,9 +19,34 @@ class Suborder {
 
 class _MenuPageState extends State<MenuPage> {
 
+  File _picked;
+
+
+
   DayOfWeek today;
   Suborder sub;
 
+  File _imageFile;
+
+  Widget _buildImage() {
+    if (_imageFile != null) {
+
+      return Image.file(_imageFile,width: 100,height: 100);
+    } else {
+      return Text('Take an image to start', style: TextStyle(fontSize: 18.0));
+    }
+  }
+
+  Future<void> captureImage(ImageSource imageSource) async {
+    try {
+      final imageFile = await ImagePicker.pickImage(source: imageSource);
+      setState(() {
+        _imageFile = imageFile ;
+      });
+    } catch (e) {
+      print(e);
+    }
+  }
 
 
   List<DayOfWeek> theWeek = <DayOfWeek>[
@@ -67,6 +95,41 @@ class _MenuPageState extends State<MenuPage> {
 
 
   ];
+
+  Widget _buildButtons() {
+    return ConstrainedBox(
+        constraints: BoxConstraints.expand(height: 80.0),
+        child: Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: <Widget>[
+              _buildActionButton(
+                key: Key('retake'),
+                text: 'Photos',
+                onPressed: () => captureImage(ImageSource.gallery),
+              ),
+              _buildActionButton(
+                key: Key('upload'),
+                text: 'Camera',
+                onPressed: () => captureImage(ImageSource.camera),
+              ),
+            ]));
+  }
+
+
+
+
+  Widget _buildActionButton({Key key, String text, Function onPressed}) {
+    return Expanded(
+      child: FlatButton(
+          key: key,
+          child: Text(text, style: TextStyle(fontSize: 20.0)),
+          shape: RoundedRectangleBorder(),
+          color: Colors.blueAccent,
+          textColor: Colors.white,
+          onPressed: onPressed),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -262,6 +325,10 @@ class _MenuPageState extends State<MenuPage> {
                           }).toList(),
                         ),
 
+              //           Expanded(child:  _buildImage()),
+              //           _buildButtons(),
+              // Image.file(_imageFile,width: 100,height: 100);
+
                         RaisedButton(
                           elevation: 15.0,
 
@@ -288,6 +355,8 @@ class _MenuPageState extends State<MenuPage> {
                 )
             )
         )
+
+
     );
   }
 }

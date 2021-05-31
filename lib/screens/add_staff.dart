@@ -1,27 +1,13 @@
 import 'package:device_info/device_info.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import './sideBar.dart';
 import 'package:intl/intl.dart';
-import 'package:device_info/device_info.dart';
-import 'dart:collection';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:async';
-import 'package:device_info/device_info.dart';
-import 'package:dio/dio.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:pinput/pin_put/pin_put.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:circular_countdown_timer/circular_countdown_timer.dart';
-
-// shared pref admin id all details list of string
-//conditional login of otp else error message user on same screen
-//resend otp after 60 seconds
 import 'package:http/http.dart' as http;
-import 'package:login_app/utilities/constants.dart';
-
+import 'home_screen.dart';
 
 class NotesPage extends StatefulWidget {
   @override
@@ -35,139 +21,28 @@ class DayOfWeek {
   final int id;
 }
 
-
-
-
 class _NotesPageState extends State<NotesPage> {
-
   DateTime selectedDate = DateTime.now();
   Map<String, dynamic> deviceData;
   String formattedDate = 'Enter DOB ';
-  String deviceId = '';
-
-  Map<String, dynamic> _readAndroidBuildData(AndroidDeviceInfo build) {
-    return <String, dynamic>{
-      'version.securityPatch': build.version.securityPatch,
-      'version.sdkInt': build.version.sdkInt,
-      'version.release': build.version.release,
-      'version.previewSdkInt': build.version.previewSdkInt,
-      'version.incremental': build.version.incremental,
-      'version.codename': build.version.codename,
-      'version.baseOS': build.version.baseOS,
-      'board': build.board,
-      'bootloader': build.bootloader,
-      'brand': build.brand,
-      'device': build.device,
-      'display': build.display,
-      'fingerprint': build.fingerprint,
-      'hardware': build.hardware,
-      'host': build.host,
-      'id': build.id,
-      'manufacturer': build.manufacturer,
-      'model': build.model,
-      'product': build.product,
-      'supported32BitAbis': build.supported32BitAbis,
-      'supported64BitAbis': build.supported64BitAbis,
-      'supportedAbis': build.supportedAbis,
-      'tags': build.tags,
-      'type': build.type,
-      'isPhysicalDevice': build.isPhysicalDevice,
-      //used for android device id
-      'androidId': build.androidId,
-      'systemFeatures': build.systemFeatures,
-    };
-  }
-
-//map of string and object for ios device
-  Map<String, dynamic> _readIosDeviceInfo(IosDeviceInfo data) {
-    return <String, dynamic>{
-      'name': data.name,
-      'systemName': data.systemName,
-      'systemVersion': data.systemVersion,
-      'model': data.model,
-      'localizedModel': data.localizedModel,
-      // used for ios device id
-      'identifierForVendor': data.identifierForVendor,
-      'isPhysicalDevice': data.isPhysicalDevice,
-      'utsname.sysname:': data.utsname.sysname,
-      'utsname.nodename:': data.utsname.nodename,
-      'utsname.release:': data.utsname.release,
-      'utsname.version:': data.utsname.version,
-      'utsname.machine:': data.utsname.machine,
-    };
-  }
-
-
-  @override
-  void initState() {
-    super.initState();
-    initPlatformState();
-  }
-
-  Future<void> initPlatformState() async {
-    // deviceinfo plugin coming from deviceinfo.dart package
-    final DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
-    //device
-    Map<String, dynamic> _deviceData = <String, dynamic>{};
-    //devicedata for android or ios device
-    deviceData = <String, dynamic>{};
-
-    try {
-      if (Platform.isAndroid) {
-        //map of string and dynamic(it contains string int object) by calling readandroidbuilddata and passing androidinfo as parameter
-        deviceData = _readAndroidBuildData(await deviceInfoPlugin.androidInfo);
-        deviceId = deviceData['androidId'];
-      } else if (Platform.isIOS) {
-        deviceData = _readIosDeviceInfo(await deviceInfoPlugin.iosInfo);
-        deviceId = deviceData['identifierForVendor'];
-      }
-    } on PlatformException {
-      deviceData = <String, dynamic>{
-        'Error:': 'Failed to get platform version.'
-      };
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-      }
-
+  String deviceId = 'Dkaflflkfakflaklfklfklkflkflkflkfflk';
+  //this is global key
+  final _formKey = GlobalKey<FormState>();
   TextEditingController namecontroller = new TextEditingController();
-
   TextEditingController contactcontroller = new TextEditingController();
-
   TextEditingController emailcontroller = new TextEditingController();
-
   TextEditingController adharcontroller = new TextEditingController();
-
   TextEditingController pancontroller = new TextEditingController();
-
   TextEditingController designationcontroller = new TextEditingController();
-
   TextEditingController currentaddresscontroller = new TextEditingController();
-
   TextEditingController permanentaddresscontroller = new TextEditingController();
-
   DayOfWeek today;
-
   List<DayOfWeek> theWeek = <DayOfWeek>[
     const DayOfWeek(1, "Male"),
     const DayOfWeek(2, "Female"),
-
   ];
 
   void _addStaff() async {
-    //get device id for android device
-
     String decodedResponse = '';
     String name;
     //API call here for verifying otp
@@ -201,42 +76,34 @@ class _NotesPageState extends State<NotesPage> {
           headers: {"Content-Type": "application/x-www-form-urlencoded"},
           encoding: Encoding.getByName("utf-8"));
       decodedResponse = utf8.decode(response.bodyBytes);
-      //map of string and object type used for storing data coming from otp response
-      Map<String, dynamic> mapOtpResponse = jsonDecode(decodedResponse);
-      //fetch message Response status ie invalid otp or valid otp
-      print('checking' + mapOtpResponse.toString());
-      Map<String, dynamic> map1 =
-      jsonDecode(decodedResponse); // import 'dart:convert';
-      print('demo'+decodedResponse);
-      String name = map1['data']['status'];
-      if(name=="1")
-        {
-          Fluttertoast.showToast(
-              msg: 'Registration Successful',
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.CENTER,
-              timeInSecForIosWeb: 1,
-              backgroundColor: Colors.red,
-              textColor: Colors.white,
-              fontSize: 16.0);
-        }
-      else
-        {
-          Fluttertoast.showToast(
-              msg: 'Registration Failed',
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.CENTER,
-              timeInSecForIosWeb: 1,
-              backgroundColor: Colors.red,
-              textColor: Colors.white,
-              fontSize: 16.0);
-        }
+      //fetch message Response for registration of staff
+      Map<String, dynamic> staffMap = jsonDecode(decodedResponse);
+      String status = staffMap['data']['status'];
+      if (status == "1") {
+        Fluttertoast.showToast(
+            msg: 'Registration Successful',
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.CENTER,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.green,
+            textColor: Colors.white,
+            fontSize: 16.0);
+        _navigateToNextScreen(context);
+      } else {
+        Fluttertoast.showToast(
+            msg: 'Registration Failed',
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.CENTER,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+            fontSize: 16.0);
+      }
     } catch (e) {
       //Write exception statement here
 
     }
   }
-
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime picked = await showDatePicker(
@@ -264,156 +131,207 @@ class _NotesPageState extends State<NotesPage> {
             child: new SingleChildScrollView(
                 child: new ConstrainedBox(
                     constraints: new BoxConstraints(),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                    child: Form(
+                        key: _formKey,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            //name textfield
 
-                      children: <Widget>[
+                            Padding(
+                              padding: EdgeInsets.all(15),
+                              child: TextFormField(
+                                validator: (value) {
+                                  if (value.isEmpty) {
+                                    return 'Please enter name';
+                                  }
+                                  return null;
+                                },
+                                controller: namecontroller,
+                                decoration: InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  labelText: 'Enter Your Name',
+                                  hintText: 'Enter Your Name',
+                                ),
+                              ),
+                            ),
+                            //contact number
+                            Padding(
+                              padding: EdgeInsets.all(15),
+                              child: TextFormField(
+                                validator: (value) {
+                                  if (value.isEmpty) {
+                                    return 'Please enter name';
+                                  }
+                                  return null;
+                                },
 
-                        Padding(
-                          padding: EdgeInsets.all(15),
-                          child: TextField(
-                            controller: namecontroller,
-                            decoration: InputDecoration(
-                              border: OutlineInputBorder(),
-                              labelText: 'Enter Your Name',
-                              hintText: 'Enter Your Name',
+                                controller: contactcontroller,
+                                decoration: InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  labelText: 'Contact Number',
+                                  hintText: 'Contact Number',
+                                ),
+                              ),
                             ),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.all(15),
-                          child: TextField(
-                            controller: contactcontroller,
-                            decoration: InputDecoration(
-                              border: OutlineInputBorder(),
-                              labelText: 'Contact Number',
-                              hintText: 'Contact Number',
+                            //email id
+                            Padding(
+                              padding: EdgeInsets.all(15),
+                              child: TextFormField(
+                                validator: (value) {
+                                  if (value.isEmpty) {
+                                    return 'Please enter name';
+                                  }
+                                  return null;
+                                },
+                                controller: emailcontroller,
+                                decoration: InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  labelText: 'Email id',
+                                  hintText: 'Email id',
+                                ),
+                              ),
                             ),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.all(15),
-                          child: TextField(
-                            controller: emailcontroller,
-                            decoration: InputDecoration(
-                              border: OutlineInputBorder(),
-                              labelText: 'Email id',
-                              hintText: 'Email id',
+                            //date of birth
+                            SizedBox(
+                                width: double.infinity, // <-- match_parent
+                                child: RaisedButton(
+                                  textColor: Colors.white,
+                                  color: Colors.red,
+                                  child: Text(formattedDate),
+                                  onPressed: () => _selectDate(context),
+                                )),
+                            //aadhar card textfield
+                            Padding(
+                              padding: EdgeInsets.all(15),
+                              child: TextFormField(
+                                controller: adharcontroller,
+                                decoration: InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  labelText: 'Aadhar Number',
+                                  hintText: 'Aadhar Number',
+                                ),
+                              ),
                             ),
-                          ),
-                        ),
-                        SizedBox(
-                            width: double.infinity, // <-- match_parent
-                            child: RaisedButton(
-                              textColor: Colors.white,
-                                color: Colors.red,
-                              child: Text(formattedDate),
-                              onPressed: () => _selectDate(context),
-                            )
-                        ),
-                        Padding(
-                          padding: EdgeInsets.all(15),
-                          child: TextField(
-                            controller: adharcontroller,
-                            decoration: InputDecoration(
-                              border: OutlineInputBorder(),
-                              labelText: 'Aadhar Number',
-                              hintText: 'Aadhar Number',
-                            ),
-                          ),
-                        ),
-
-                        Text("Gender", textAlign: TextAlign.center,
-                            style: TextStyle(
-                                color: Colors.black,
-                                decoration: TextDecoration.none,
-                                fontSize: 22.0)),
-                        DropdownButton<DayOfWeek>(
-
-                          value: today,
-                          onChanged: (DayOfWeek val) {
-                            setState(() {
-                              today = val;
-                            });
-                          },
-                          items: theWeek.map((item) {
-                            return DropdownMenuItem<DayOfWeek>(
-                              value: item,
-                              child: Text(
-                                item.name,
+                            //gender text
+                            Text("Gender",
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                     color: Colors.black,
                                     decoration: TextDecoration.none,
-                                    fontSize: 22.0),
+                                    fontSize: 22.0)),
+                            //gender dropdown
+                            DropdownButton<DayOfWeek>(
+                              value: today,
+                              onChanged: (DayOfWeek val) {
+                                setState(() {
+                                  today = val;
+                                });
+                              },
+                              items: theWeek.map((item) {
+                                return DropdownMenuItem<DayOfWeek>(
+                                  value: item,
+                                  child: Text(
+                                    item.name,
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        decoration: TextDecoration.none,
+                                        fontSize: 22.0),
+                                  ),
+                                );
+                              }).toList(),
+                            ),
+                            //pan number textfield
+                            Padding(
+                              padding: EdgeInsets.all(15),
+                              child: TextFormField(
+                                validator: (value) {
+                                  if (value.isEmpty) {
+                                    return 'Please enter name';
+                                  }
+                                  return null;
+                                },
+                                controller: pancontroller,
+                                decoration: InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  labelText: 'Pan Number',
+                                  hintText: 'Pan Number',
+                                ),
                               ),
-                            );
-                          }).toList(),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.all(15),
-                          child: TextField(
-                            controller: pancontroller,
-                            decoration: InputDecoration(
-                              border: OutlineInputBorder(),
-                              labelText: 'Pan Number',
-                              hintText: 'Pan Number',
                             ),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.all(15),
-                          child: TextField(
-                            controller: designationcontroller,
-                            decoration: InputDecoration(
-                              border: OutlineInputBorder(),
-                              labelText: 'Designation',
-                              hintText: 'Designation',
+                            //designation textfield
+                            Padding(
+                              padding: EdgeInsets.all(15),
+                              child: TextFormField(
+                                validator: (value) {
+                                  if (value.isEmpty) {
+                                    return 'Please enter name';
+                                  }
+                                  return null;
+                                },
+                                controller: designationcontroller,
+                                decoration: InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  labelText: 'Designation',
+                                  hintText: 'Designation',
+                                ),
+                              ),
                             ),
-                          ),
-
-
-                        ),
-                        Padding(
-                          padding: EdgeInsets.all(15),
-                          child: TextField(
-                            controller: currentaddresscontroller,
-                            decoration: InputDecoration(
-                              border: OutlineInputBorder(),
-                              labelText: 'Current Address',
-                              hintText: 'Current Address',
+                            //current address
+                            Padding(
+                              padding: EdgeInsets.all(15),
+                              child: TextFormField(
+                                validator: (value) {
+                                  if (value.isEmpty) {
+                                    return 'Please enter name';
+                                  }
+                                  return null;
+                                },
+                                controller: currentaddresscontroller,
+                                decoration: InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  labelText: 'Current Address',
+                                  hintText: 'Current Address',
+                                ),
+                              ),
                             ),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.all(15),
-                          child: TextField(
-                            controller: permanentaddresscontroller,
-                            decoration: InputDecoration(
-                              border: OutlineInputBorder(),
-                              labelText: 'Permanent Address',
-                              hintText: 'Permanent Address',
+                            //permanent address
+                            Padding(
+                              padding: EdgeInsets.all(15),
+                              child: TextFormField(
+                                validator: (value) {
+                                  if (value.isEmpty) {
+                                    return 'Please enter name';
+                                  }
+                                  return null;
+                                },
+                                controller: permanentaddresscontroller,
+                                decoration: InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  labelText: 'Permanent Address',
+                                  hintText: 'Permanent Address',
+                                ),
+                              ),
                             ),
-                          ),
-                        ),
-                        SizedBox(
-                            width: double.infinity, // <-- match_parent
-                            child: RaisedButton(
-                              textColor: Colors.white,
-                              color: Colors.red,
-                              child: Text('SUBMIT'),
-                              onPressed: () => _addStaff(),
-
-                            )
-                        ),
-                      ],
-
-                    )
-                )
-            )
-        )
-    );
+                            // submit raised button
+                            SizedBox(
+                                width: double.infinity, // <-- match_parent
+                                child: RaisedButton(
+                                    textColor: Colors.white,
+                                    color: Colors.red,
+                                    child: Text('SUBMIT'),
+                                    onPressed: () {
+                                      if (_formKey.currentState.validate()) {
+                                        _addStaff();
+                                      }
+                                    })),
+                          ],
+                        ))))));
   }
 
+  void _navigateToNextScreen(BuildContext context) {
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (context) => HomePage()));
+  }
 }
-
